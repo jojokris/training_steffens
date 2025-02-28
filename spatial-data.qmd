@@ -155,3 +155,120 @@ write_sf(pop_rgn_3338_sf,
 
 ```
 
+# Visualize with ggplot using geom_sf()
+```{r}
+# plot population by region 
+ggplot(pop_rgn_3338_sf) +
+  geom_sf(aes(fill = total_pop)) +
+  labs(fill = "Total Population") +
+  scale_fill_continuous(low = "black" ,
+                        high = "lightblue",
+                        labels = label_comma()) +
+  theme_bw()
+
+```
+
+## multiple shapefiles on the same plot 
+```{r}
+# load in rivers dataset
+
+rivers_3338_sf <- read_sf(here("data/ak_rivers_simp.shp"))
+head(rivers_3338_sf)
+
+st_crs(rivers_3338_sf)
+
+ggplot() +
+  geom_sf(data = pop_rgn_3338_sf,
+          aes(fill = total_pop)) +
+  geom_sf(data = pop_3338_sf,
+          size = 0.5)+
+  geom_sf(data = rivers_3338_sf,
+          aes(linewidth = StrOrder)) +
+  scale_linewidth(range = c(0.05, 0.5), 
+                  guide = "none") +
+  scale_fill_continuous(labels = label_comma()) +
+  labs(title = "Total Population by Alaska Region",
+       fill = "Total Population") +
+  theme_bw()
+```
+
+```{r}
+pop_3857_sf <- st_transform(pop_3338_sf, 
+                         crs = 3857)
+
+ggplot(data = pop_3857_sf) +
+    ggspatial::annotation_map_tile(type = "osm", zoom = 4, progress = 'none') + # higher zoom values are more detailed 
+    geom_sf(aes(color = population),
+            fill = NA) +
+    scale_color_continuous(low = "darkkhaki",
+                           high =  "firebrick",
+                           labels = comma)
+```
+
+# sf objects with leaflet
+
+- expected lat/lon WGS84
+- in order to display with different projection, but define a custom crs 
+
+1. Create custom Alaska Albers projection
+```{r}
+epsg3338 <- leaflet::leafletCRS(    
+  crsClass = "L.Proj.CRS",
+    code = "EPSG:3338",
+    proj4def =  "+proj=aea +lat_1=55 +lat_2=65 +lat_0=50 +lon_0=-154 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+    resolutions = 2 ^ (16:7)
+  )
+
+```
+
+2. Create unprojected WEGS84 sf object
+```{r}
+pop_rgn_4326_sf <- pop_rgn_3338_sf %>%
+  st_transform(crs = 4326)
+
+st_crs(pop_rgn_4326_sf)
+```
+3. Create leaflet map
+```{r}
+m <- leaflet(options = leafletOptions(crs = epsg3338)) %>%
+  addPolygons(data = pop_rgn_4326_sf,
+              fillColor = "gray",
+              weight = 1)
+m
+```
+
+4. Customize
+```{r}
+# create color palette for total population 
+pal <- colorNumeric(palette = "Reds", domain = pop_rgn_4326_sf$total_pop)
+
+m <- leaflet(options = leafletOptions(crs = epsg3338)) %>%
+    addPolygons(
+        data = pop_rgn_4326_sf,
+        fillColor = ~ pal(total_pop),
+        weight = 1,
+        color = "black",
+        fillOpacity = 1
+    ) %>%
+    addCircleMarkers(
+        data = pop_4326_sf,
+        lat = ~ lat,
+        lng = ~ lng,
+        radius = ~ log(population / 500),
+        # arbitrary scaling
+        fillColor = "gray",
+        fillOpacity = 1,
+        weight = 0.25,
+        color = "black",
+        label = ~ paste0(pop_4326_sf$city, ", population ", comma(pop_4326_sf$population))
+    ) %>%
+    addLegend(
+        position = "bottomleft",
+        pal = pal,
+        values = range(pop_rgn_4326_sf$total_pop),
+        title = "Total Population"
+    )
+
+m
+```
+
