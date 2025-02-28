@@ -62,6 +62,7 @@ plot(ak_rgns_3338_sf)
 ```
 
 ## filter()
+
 ```{r}
 #get values in region colmn
 unique(ak_rgns_3338_sf$region)
@@ -71,6 +72,7 @@ ak_rgns_3338_sf %>%
 ```
 
 ## select()
+
 ```{r}
 colnames(ak_rgns_3338_sf)
 
@@ -78,9 +80,10 @@ ak_rgns_3338_sf %>%
   select(region)
 ```
 
-# Spatial joins 
+# Spatial joins
 
 ## read in new data
+
 ```{r}
 pop_df <-  read_csv(here("data/alaska_population.csv"))
 
@@ -88,6 +91,7 @@ head(pop_df)
 ```
 
 ## convert data frame to a spatial object
+
 ```{r}
 pop_4326_sf <- st_as_sf(pop_df,
                         coords = c('lng', 'lat'),
@@ -98,6 +102,7 @@ head(pop_4326_sf)
 ```
 
 ## joining data with st_join
+
 ```{r}
 #pop_join_sf <- st_join(pop_4326_sf,
 #                       ak_rgns_3338_sf,
@@ -115,6 +120,7 @@ head(pop_join_sf)
 ```
 
 ## calculate total population using group_by() and summarize()
+
 ```{r}
 pop_rgn_df <- pop_join_sf %>%
   st_drop_geometry() %>%
@@ -125,13 +131,15 @@ head(pop_rgn_df)
 ```
 
 ## left_join() to merge back into spatial object
+
 ```{r}
 pop_rgn_3338_sf <- left_join(ak_rgns_3338_sf, pop_rgn_df, by = "region")
 
 head(pop_rgn_3338_sf)
 ```
 
-## plot population by management area 
+## plot population by management area
+
 ```{r}
 pop_mgmt_3338_sf_bad <- pop_rgn_3338_sf %>%
   group_by(mgmt_area) %>%
@@ -149,6 +157,7 @@ plot(pop_mgmt_3338_sf["total_pop"])
 ```
 
 ## save the sf object with write_sf()
+
 ```{r}
 write_sf(pop_rgn_3338_sf,
          here("data/ak_region_population.shp"))
@@ -156,6 +165,7 @@ write_sf(pop_rgn_3338_sf,
 ```
 
 # Visualize with ggplot using geom_sf()
+
 ```{r}
 # plot population by region 
 ggplot(pop_rgn_3338_sf) +
@@ -168,7 +178,8 @@ ggplot(pop_rgn_3338_sf) +
 
 ```
 
-## multiple shapefiles on the same plot 
+## multiple shapefiles on the same plot
+
 ```{r}
 # load in rivers dataset
 
@@ -207,10 +218,11 @@ ggplot(data = pop_3857_sf) +
 
 # sf objects with leaflet
 
-- expected lat/lon WGS84
-- in order to display with different projection, but define a custom crs 
+-   expected lat/lon WGS84
+-   in order to display with different projection, but define a custom crs
 
-1. Create custom Alaska Albers projection
+1.  Create custom Alaska Albers projection
+
 ```{r}
 epsg3338 <- leaflet::leafletCRS(    
   crsClass = "L.Proj.CRS",
@@ -221,14 +233,17 @@ epsg3338 <- leaflet::leafletCRS(
 
 ```
 
-2. Create unprojected WEGS84 sf object
+2.  Create unprojected WEGS84 sf object
+
 ```{r}
 pop_rgn_4326_sf <- pop_rgn_3338_sf %>%
   st_transform(crs = 4326)
 
 st_crs(pop_rgn_4326_sf)
 ```
-3. Create leaflet map
+
+3.  Create leaflet map
+
 ```{r}
 m <- leaflet(options = leafletOptions(crs = epsg3338)) %>%
   addPolygons(data = pop_rgn_4326_sf,
@@ -237,7 +252,8 @@ m <- leaflet(options = leafletOptions(crs = epsg3338)) %>%
 m
 ```
 
-4. Customize
+4.  Customize
+
 ```{r}
 # create color palette for total population 
 pal <- colorNumeric(palette = "Reds", domain = pop_rgn_4326_sf$total_pop)
@@ -271,4 +287,3 @@ m <- leaflet(options = leafletOptions(crs = epsg3338)) %>%
 
 m
 ```
-
