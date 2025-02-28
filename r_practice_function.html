@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.551">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R Practice Functions</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="r_practice_function_files/libs/clipboard/clipboard.min.js"></script>
+<script src="r_practice_function_files/libs/quarto-html/quarto.js"></script>
+<script src="r_practice_function_files/libs/quarto-html/popper.min.js"></script>
+<script src="r_practice_function_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="r_practice_function_files/libs/quarto-html/anchor.min.js"></script>
+<link href="r_practice_function_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="r_practice_function_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="r_practice_function_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="r_practice_function_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="r_practice_function_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R Practice Functions</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'readr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:rvest':
+
+    guess_encoding</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">read_html</span>(<span class="st">"https://www.pwrc.usgs.gov/BBL/Bander_Portal/login/speclist.php"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">html_nodes</span>(webpage, <span class="st">"table"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> tbls[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(alpha_code, common_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(species, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  alpha_code common_name          
+  &lt;chr&gt;      &lt;chr&gt;                
+1 wegr       Western Grebe        
+2 clgr       Clark's Grebe        
+3 wcgr       Western/Clark's Grebe</code></pre>
+</div>
+</div>
+<section id="read-in-predator-data" class="level2">
+<h2 class="anchored" data-anchor-id="read-in-predator-data">Read in predator data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nest_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Utqiagvik_nest_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 5577 Columns: 104
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (72): book_page, site, nestID, uniqueID, plot, species, finder, nwstake,...
+dbl (32): year, old_lat, lat_corrected, old_long, long_corrected, unk2_band,...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>predator_survey <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Utqiagvik_predator_surveys.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 2337 Columns: 12
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (7): site, observer, plot, stake, species, distance, comments
+dbl  (4): year, start_time, end_time, count
+date (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>egg_measures <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Utqiagvik_egg_measurements.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 18749 Columns: 12
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (7): site, nestID, unique_nestID, plot, plotLmt, species, comments
+dbl (5): book_page, year, egg_no, length, width
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nest_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  book_page              year          site              nestID         
+ Length:5577        Min.   :2003   Length:5577        Length:5577       
+ Class :character   1st Qu.:2008   Class :character   Class :character  
+ Mode  :character   Median :2011   Mode  :character   Mode  :character  
+                    Mean   :2011                                        
+                    3rd Qu.:2015                                        
+                    Max.   :2018                                        
+                                                                        
+   uniqueID             plot             species             finder         
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   nwstake             old_lat      lat_corrected      old_long     
+ Length:5577        Min.   :71.16   Min.   :71.19   Min.   :-156.8  
+ Class :character   1st Qu.:71.25   1st Qu.:71.25   1st Qu.:-156.6  
+ Mode  :character   Median :71.26   Median :71.26   Median :-156.6  
+                    Mean   :71.27   Mean   :71.27   Mean   :-156.6  
+                    3rd Qu.:71.29   3rd Qu.:71.29   3rd Qu.:-156.5  
+                    Max.   :71.67   Max.   :71.33   Max.   :-156.2  
+                    NA's   :5438    NA's   :50      NA's   :5438    
+ long_corrected   notes_GPS_change     use_GPS            how_fnd         
+ Min.   :-156.9   Length:5577        Length:5577        Length:5577       
+ 1st Qu.:-156.6   Class :character   Class :character   Class :character  
+ Median :-156.6   Mode  :character   Mode  :character   Mode  :character  
+ Mean   :-156.6                                                           
+ 3rd Qu.:-156.5                                                           
+ Max.   :-156.5                                                           
+ NA's   :49                                                               
+   plotLmt             fence            unk1_band         unk1_original_band
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+ unk1_captured        unk1_UL            unk1_LL            unk1_UR         
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   unk1_LR            unk1_gfe           unk2_band         unk2_original_band 
+ Length:5577        Length:5577        Min.   :133231118   Min.   :133231118  
+ Class :character   Class :character   1st Qu.:197853072   1st Qu.:197853072  
+ Mode  :character   Mode  :character   Median :228156205   Median :228156205  
+                                       Mean   :224324701   Mean   :224324701  
+                                       3rd Qu.:245118565   3rd Qu.:245118565  
+                                       Max.   :246114095   Max.   :246114095  
+                                       NA's   :5525        NA's   :5525       
+ unk2_captured        unk2_UL            unk2_LL            unk2_UR         
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   unk2_LR            unk2_gfe            m_band          m_original_band   
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  m_captured            m_UL               m_LL               m_UR          
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     m_LR              m_gfe              f_band          f_original_band   
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+  f_captured            f_UL               f_LL               f_UR          
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     f_LR              f_gfe           number_banded_birds max_egg_number 
+ Length:5577        Length:5577        Min.   :0.0000      Min.   :1.000  
+ Class :character   Class :character   1st Qu.:0.0000      1st Qu.:4.000  
+ Mode  :character   Mode  :character   Median :1.0000      Median :4.000  
+                                       Mean   :0.8836      Mean   :3.826  
+                                       3rd Qu.:1.0000      3rd Qu.:4.000  
+                                       Max.   :3.0000      Max.   :8.000  
+                                                           NA's   :9      
+ number_egg_find   float_age       float_date         date_found       
+ Min.   :0.000   Min.   : 0.000   Length:5577        Length:5577       
+ 1st Qu.:3.000   1st Qu.: 3.000   Class :character   Class :character  
+ Median :4.000   Median : 5.000   Mode  :character   Mode  :character  
+ Mean   :3.545   Mean   : 5.897                                        
+ 3rd Qu.:4.000   3rd Qu.: 9.000                                        
+ Max.   :8.000   Max.   :29.000                                        
+ NA's   :9       NA's   :1165                                          
+ date_found_julian   age_found     last_day_alive     last_day_checked  
+ Min.   :149.0     Min.   : 0.00   Length:5577        Length:5577       
+ 1st Qu.:167.0     1st Qu.: 4.00   Class :character   Class :character  
+ Median :173.0     Median : 7.00   Mode  :character   Mode  :character  
+ Mean   :173.5     Mean   : 7.86                                        
+ 3rd Qu.:179.0     3rd Qu.:11.00                                        
+ Max.   :209.0     Max.   :25.00                                        
+ NA's   :2         NA's   :283                                          
+ last_day_alive_julian last_day_check_julian initiation_date   
+ Min.   :155.0         Min.   :158.0         Length:5577       
+ 1st Qu.:178.0         1st Qu.:182.0         Class :character  
+ Median :185.0         Median :186.0         Mode  :character  
+ Mean   :184.1         Mean   :186.5                           
+ 3rd Qu.:191.0         3rd Qu.:192.0                           
+ Max.   :211.0         Max.   :213.0                           
+ NA's   :99            NA's   :798                             
+ initiation_date_corrected initiation_date_corrected_julian incubation_date   
+ Length:5577               Min.   :145.0                    Length:5577       
+ Class :character          1st Qu.:160.0                    Class :character  
+ Mode  :character          Median :165.0                    Mode  :character  
+                           Mean   :165.5                                      
+                           3rd Qu.:170.0                                      
+                           Max.   :188.0                                      
+                           NA's   :283                                        
+ incubation_date_corrected est_hatch_date      hatch_date       
+ Length:5577               Length:5577        Length:5577       
+ Class :character          Class :character   Class :character  
+ Mode  :character          Mode  :character   Mode  :character  
+                                                                
+                                                                
+                                                                
+                                                                
+ Number_days_btwn_last_check_and_date_found_hatched
+ Min.   : 0.000                                    
+ 1st Qu.: 1.000                                    
+ Median : 1.000                                    
+ Mean   : 1.538                                    
+ 3rd Qu.: 1.000                                    
+ Max.   :19.000                                    
+ NA's   :2461                                      
+ day_used_for_hatch_date_or_last_date_checked  age_method       
+ Length:5577                                  Length:5577       
+ Class :character                             Class :character  
+ Mode  :character                             Mode  :character  
+                                                                
+                                                                
+                                                                
+                                                                
+ age_method_corrected  stage_find            fate            fail_cause       
+ Length:5577          Length:5577        Length:5577        Length:5577       
+ Class :character     Class :character   Class :character   Class :character  
+ Mode  :character     Mode  :character   Mode  :character   Mode  :character  
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+ fate_evidence      uncertain_of_fate  number_days_from_est_hatch
+ Length:5577        Length:5577        Min.   :-9.000            
+ Class :character   Class :character   1st Qu.: 1.000            
+ Mode  :character   Mode  :character   Median : 2.000            
+                                       Mean   : 1.706            
+                                       3rd Qu.: 3.000            
+                                       Max.   : 7.000            
+                                       NA's   :5274              
+ number_eggs_hatched number_chick_band number_eggs_observer number_eggs_lost 
+ Min.   :0.000       Min.   :0.000     Min.   :0.0000       Min.   :0.00000  
+ 1st Qu.:0.000       1st Qu.:0.000     1st Qu.:0.0000       1st Qu.:0.00000  
+ Median :3.000       Median :0.000     Median :0.0000       Median :0.00000  
+ Mean   :2.022       Mean   :1.467     Mean   :0.1647       Mean   :0.02976  
+ 3rd Qu.:4.000       3rd Qu.:3.000     3rd Qu.:0.0000       3rd Qu.:0.00000  
+ Max.   :4.000       Max.   :4.000     Max.   :6.0000       Max.   :4.00000  
+ NA's   :3           NA's   :3         NA's   :2                             
+ number_eggs_predated number_eggs_abandoned number_eggs_failed_to_hatch
+ Min.   :0.0000       Min.   :0.0000        Min.   :0.000              
+ 1st Qu.:0.0000       1st Qu.:0.0000        1st Qu.:0.000              
+ Median :0.0000       Median :0.0000        Median :0.000              
+ Mean   :0.9652       Mean   :0.1942        Mean   :0.158              
+ 3rd Qu.:2.0000       3rd Qu.:0.0000        3rd Qu.:0.000              
+ Max.   :7.0000       Max.   :6.0000        Max.   :8.000              
+                                                                       
+ number_eggs_unknown number_eggs_with_embryo number_eggs_stable_isotope
+ Min.   :0.0000      Min.   :0.0000          Min.   :0.00000           
+ 1st Qu.:0.0000      1st Qu.:0.0000          1st Qu.:0.00000           
+ Median :0.0000      Median :0.0000          Median :0.00000           
+ Mean   :0.2871      Mean   :0.7022          Mean   :0.04662           
+ 3rd Qu.:0.0000      3rd Qu.:1.0000          3rd Qu.:0.00000           
+ Max.   :4.0000      Max.   :6.0000          Max.   :4.00000           
+ NA's   :4           NA's   :3032                                      
+ number_eggs_bacteria replacement_clutch manipulation      
+ Min.   :0.0000       Min.   :0.0000     Length:5577       
+ 1st Qu.:0.0000       1st Qu.:0.0000     Class :character  
+ Median :0.0000       Median :0.0000     Mode  :character  
+ Mean   :0.0364       Mean   :0.0511                       
+ 3rd Qu.:0.0000       3rd Qu.:0.0000                       
+ Max.   :4.0000       Max.   :2.0000                       
+                                                           
+ manipulation_comments tiny_tag_number    dom_land           dom_veg         
+ Length:5577           Min.   :309029   Length:5577        Length:5577       
+ Class :character      1st Qu.:777910   Class :character   Class :character  
+ Mode  :character      Median :777937   Mode  :character   Mode  :character  
+                       Mean   :718999                                        
+                       3rd Qu.:777957                                        
+                       Max.   :777978                                        
+                       NA's   :5442                                          
+    conceal          aspect          old_nest_number    nest_reuse_corrected
+ Min.   :  0.00   Length:5577        Length:5577        Length:5577         
+ 1st Qu.: 15.00   Class :character   Class :character   Class :character    
+ Median : 30.00   Mode  :character   Mode  :character   Mode  :character    
+ Mean   : 37.52                                                             
+ 3rd Qu.: 60.00                                                             
+ Max.   :100.00                                                             
+ NA's   :2274                                                               
+ use_nest_reuse_id   tag_number        nest_book_comments   problem         
+ Length:5577        Length:5577        Length:5577        Length:5577       
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(predator_survey<span class="sc">$</span>species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "glgu" "poja" "none" "paja" "ltja" "seow" "cora" "sacr" "snow" "pefa"
+[11] "arfo" "rutu" "herg" "unja" NA     "merl" "arte" "noha"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(egg_measures)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "book_page"     "year"          "site"          "nestID"       
+ [5] "unique_nestID" "plot"          "plotLmt"       "species"      
+ [9] "egg_no"        "length"        "width"         "comments"     </code></pre>
+</div>
+</div>
+</section>
+<section id="translate-species-code-into-common-name" class="level2">
+<h2 class="anchored" data-anchor-id="translate-species-code-into-common-name">translate species code into common name</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>comm_names_pred <span class="ot">&lt;-</span> <span class="fu">left_join</span>(predator_survey, species,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"species"</span> <span class="ot">=</span> <span class="st">"alpha_code"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="functions-to-add-species-common-name-to-any-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="functions-to-add-species-common-name-to-any-data-frame">functions to add species common name to any data frame</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"species"</span> <span class="ot">=</span> <span class="st">"alpha_code"</span>))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(return_df)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="document-function-inserting-roxygen-skeleton-and-adding-description" class="level2">
+<h2 class="anchored" data-anchor-id="document-function-inserting-roxygen-skeleton-and-adding-description">document function inserting Roxygen skeleton and adding description</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Functions to add species common name to any data frame</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param df data frame contains species codes in column `species`</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param species data frame defines species codes with columns entitled `alpha_code` and `common_name` </span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return data frame with original data df + common name of species</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' @examples `*provide an example*`</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species) {</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, </span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"species"</span> <span class="ot">=</span> <span class="st">"alpha_code"</span>))</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(return_df)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="use-function-to-clean-names-of-each-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="use-function-to-clean-names-of-each-data-frame">use function to clean names of each data frame</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pred_clean <span class="ot">&lt;-</span> <span class="fu">species_name</span>(predator_survey, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, date, common_name, count) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>nest_data_clean <span class="ot">&lt;-</span> <span class="fu">species_name</span>(nest_data, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, nestID, common_name, lat_corrected, long_corrected) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>eggs_clean <span class="ot">&lt;-</span> <span class="fu">species_name</span>(egg_measures, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, nestID, common_name, length, width) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
