@@ -44,7 +44,7 @@ unique(predator_survey$species)
 colnames(egg_measures)
 ```
 
-## translate species code into common name 
+## translate species code into common name
 
 ```{r}
 comm_names_pred <- left_join(predator_survey, species,
@@ -64,7 +64,6 @@ species_name <- function(df, species) {
 ```
 
 ## document function inserting Roxygen skeleton and adding description
-
 
 ```{r}
 #' Functions to add species common name to any data frame
@@ -99,4 +98,3 @@ eggs_clean <- species_name(egg_measures, species) %>%
     select(year, site, nestID, common_name, length, width) %>% 
     filter(!is.na(common_name))
 ```
-
